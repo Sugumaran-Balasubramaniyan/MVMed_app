@@ -9,9 +9,9 @@ data['Date'] = pd.to_datetime(data['Date'])
 warehouse_df = pd.read_csv('warehouse_data.csv')
 
 # Function to detect sudden increase
-def detect_sudden_increase(product_to_analyze, threshold):
+def detect_sudden_increase(product_to_analyze, threshold, rolling_window):
     product_data = data[data['Product'] == product_to_analyze]
-    product_data['Moving_Avg'] = product_data['Dispensation'].rolling(window=7, min_periods=1).mean()
+    product_data['Moving_Avg'] = product_data['Dispensation'].rolling(window=rolling_window, min_periods=1).mean()
     product_data['Dispensation_Diff'] = product_data['Dispensation'] - product_data['Moving_Avg']
     sudden_increase = product_data[product_data['Dispensation_Diff'] > threshold]
     return sudden_increase, product_data
@@ -30,12 +30,12 @@ st.sidebar.title('Settings')
 selected_product = st.sidebar.selectbox('Select Product', data['Product'].unique())
 start_date = st.sidebar.date_input('Start Date', min_value=data['Date'].min(), max_value=data['Date'].max())
 end_date = st.sidebar.date_input('End Date', min_value=start_date, max_value=data['Date'].max())
-# threshold = st.sidebar.slider('Threshold', min_value=0, max_value=10, step=1, value=2)
+rolling_window = st.sidebar.slider('Rolling Window', min_value=0, max_value=30, step=1, value=7)
 threshold = 2
 
 # Button to trigger detection
 if st.sidebar.button('Detect Sudden Increase'):
-    sudden_increase, product_data = detect_sudden_increase(selected_product, threshold)
+    sudden_increase, product_data = detect_sudden_increase(selected_product, threshold, rolling_window)
     
     # Convert start and end dates to pandas Timestamp objects
     start_date = pd.Timestamp(start_date)
@@ -57,7 +57,7 @@ if st.sidebar.button('Detect Sudden Increase'):
     # Plot
     fig, ax = plt.subplots()
     ax.plot(filtered_data['Date'], filtered_data['Dispensation'], label='Dispensation')
-    ax.plot(filtered_data['Date'], filtered_data['Moving_Avg(7)'], label='Moving Average', linestyle='--', color='red')
+    ax.plot(filtered_data['Date'], filtered_data['Moving_Avg'], label='Moving Average', linestyle='--', color='red')
     
     for idx, row in sudden_increase_filtered.iterrows():
         ax.scatter(row['Date'], row['Dispensation'], color='red', marker='o')
