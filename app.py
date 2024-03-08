@@ -57,7 +57,7 @@ if st.sidebar.button('Detect Sudden Increase'):
     # Plot
     fig, ax = plt.subplots()
     ax.plot(filtered_data['Date'], filtered_data['Dispensation'], label='Dispensation')
-    ax.plot(filtered_data['Date'], filtered_data['Moving_Avg'], label='Moving Average', linestyle='--', color='red')
+    ax.plot(filtered_data['Date'], filtered_data['Moving_Avg(7)'], label='Moving Average', linestyle='--', color='red')
     
     for idx, row in sudden_increase_filtered.iterrows():
         ax.scatter(row['Date'], row['Dispensation'], color='red', marker='o')
