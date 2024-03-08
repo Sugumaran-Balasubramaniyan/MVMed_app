@@ -103,7 +103,7 @@ def check_gtin(gtin):
     if not result.empty:
         st.success("Sender: " + result['Sender'].values[0])
     else:
-        st.error("GTIN not found in dataframe.")
+        st.error("GTIN not found in database.")
 
 # Check if GTIN input is provided and call the function
 if gtin_input:
