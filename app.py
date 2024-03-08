@@ -91,7 +91,7 @@ if st.sidebar.button('Analyze Stock Levels'):
 
 
 # Load GTIN data
-gtin_df = pd.read_excel('GTIN.xlsx')
+gtin_df = pd.read_csv('GTIN.csv',  encoding='ISO-8859-1')
 
 # Sidebar title and input for GTIN
 st.sidebar.title('Check GTIN')
