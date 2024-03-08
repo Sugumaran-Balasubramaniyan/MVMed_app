@@ -23,7 +23,7 @@ st.set_page_config(layout="wide")
 st.image('myverimed logo transparent.png', width=300)
 
 # Title
-st.title('Dispensation and Warehouse Stock Monitoring App')
+st.title('Dispensation and Warehouse Stock Monitoring Application')
 
 # Sidebar
 st.sidebar.title('Settings')
