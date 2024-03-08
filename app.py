@@ -8,6 +8,7 @@ data['Date'] = pd.to_datetime(data['Date'])
 
 warehouse_df = pd.read_csv('warehouse_data.csv')
 
+
 # Function to detect sudden increase
 def detect_sudden_increase(product_to_analyze, threshold, rolling_window):
     product_data = data[data['Product'] == product_to_analyze]
@@ -88,5 +89,24 @@ if st.sidebar.button('Analyze Stock Levels'):
         deficiency_count = warehouse_df[(warehouse_df['Warehouse'] == warehouse) & (warehouse_df['Below Minimum'])].shape[0]
         st.write(f"{warehouse}: {deficiency_count} product(s) below minimum stock level")
 
+
+# Load GTIN data
+gtin_df = pd.read_excel('GTIN.xlsx')
+
+# Sidebar title and input for GTIN
+st.sidebar.title('Check GTIN')
+gtin_input = st.sidebar.number_input('GTIN:', value=0)
+
+
+def check_gtin(gtin):
+    result = gtin_df[gtin_df['GTIN'] == gtin]
+    if not result.empty:
+        st.success("Sender: " + result['Sender'].values[0])
+    else:
+        st.error("GTIN not found in dataframe.")
+
+# Check if GTIN input is provided and call the function
+if gtin_input:
+    check_gtin(gtin_input)
 
 
