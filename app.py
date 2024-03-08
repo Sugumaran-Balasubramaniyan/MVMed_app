@@ -87,3 +87,6 @@ if st.sidebar.button('Analyze Stock Levels'):
     for warehouse in warehouse_df['Warehouse'].unique():
         deficiency_count = warehouse_df[(warehouse_df['Warehouse'] == warehouse) & (warehouse_df['Below Minimum'])].shape[0]
         st.write(f"{warehouse}: {deficiency_count} product(s) below minimum stock level")
+
+
+
