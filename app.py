@@ -27,7 +27,7 @@ st.markdown("""
             {
                 visibility: hidden;
             }
-            .viewerBadge_link__qRIco
+            .viewerBadge_container__r5tak
             {
                 visibility: hidden;
             }
