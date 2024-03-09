@@ -27,6 +27,10 @@ st.markdown("""
             {
                 visibility: hidden;
             }
+            .viewerBadge_link__qRIco
+            {
+                visibility: hidden;
+            }
             </style>
             """, unsafe_allow_html = True)
 
