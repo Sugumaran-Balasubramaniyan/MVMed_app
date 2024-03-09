@@ -20,6 +20,17 @@ def detect_sudden_increase(product_to_analyze, threshold, rolling_window):
 # Streamlit app
 st.set_page_config(layout="wide") 
 
+# remove header
+st.markdown("""
+            <style>
+            .st-emotion-cache-zq5wmm
+            {
+                visibility: hidden;
+            }
+            </style>
+            """)
+
+
 # Company logo
 st.image('myverimed logo transparent.png', width=300)
 
