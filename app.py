@@ -49,6 +49,41 @@ end_date = st.sidebar.date_input('End Date', min_value=start_date, max_value=dat
 rolling_window = st.sidebar.slider('Rolling Window', min_value=0, max_value=30, step=1, value=7)
 threshold = 2
 
+# Dictionary containing medication information
+medications = {
+    "Paracetamol": {
+        "Related Medications": ["Tylenol", "Panadol", "Acetaminophen", "Excedrin"],
+        "Common Uses": "Pain relief, fever reduction"
+    },
+    "Aspirin": {
+        "Related Medications": ["Bayer Aspirin", "Bufferin", "Ecotrin"],
+        "Common Uses": "Pain relief, fever reduction, anti-inflammatory, antiplatelet (used for heart health)"
+    },
+    "Ibuprofen": {
+        "Related Medications": ["Advil", "Motrin", "Nurofen"],
+        "Common Uses": "Pain relief, fever reduction, anti-inflammatory"
+    },
+    "Amoxicillin": {
+        "Related Medications": ["Penicillin V", "Ampicillin", "Augmentin"],
+        "Common Uses": "Antibiotic for bacterial infections, such as respiratory infections, ear infections, urinary tract infections"
+    },
+    "Loratadine": {
+        "Related Medications": ["Cetirizine (Zyrtec)", "Fexofenadine (Allegra)", "Desloratadine (Clarinex)"],
+        "Common Uses": "Antihistamine for allergies, such as hay fever, allergic rhinitis, hives"
+    }
+}
+
+# Function to display related medications and common uses
+def display_info(medication):
+    if medication in medications:
+        related_medications = medications[medication]["Related Medications"]
+        common_uses = medications[medication]["Common Uses"]
+        st.write(f"Related Medications: {', '.join(related_medications)}")
+        st.write(f"Common Uses: {common_uses}")
+    else:
+        return "Medication not found in database."
+
+
 # Button to trigger detection
 if st.sidebar.button('Detect Sudden Increase'):
     sudden_increase, product_data = detect_sudden_increase(selected_product, threshold, rolling_window)
@@ -63,9 +98,10 @@ if st.sidebar.button('Detect Sudden Increase'):
     # Filter sudden increase data within the selected date range
     sudden_increase_filtered = sudden_increase.loc[(sudden_increase['Date'] >= start_date) & (sudden_increase['Date'] <= end_date)]
 
-    # Display result
+  # Display result
     if not sudden_increase_filtered.empty:
         st.warning(f"Alert: Sudden increase in dispensation of {selected_product} detected!")
+        st.write(display_info(selected_product))
         st.dataframe(sudden_increase_filtered)
     else:
         st.info(f"No sudden increase in dispensation of {selected_product} detected within the specified date range.")
