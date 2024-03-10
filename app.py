@@ -78,8 +78,8 @@ def display_info(medication):
     if medication in medications:
         related_medications = medications[medication]["Related Medications"]
         common_uses = medications[medication]["Common Uses"]
-        st.write(f"Related Medications: {', '.join(related_medications)}")
-        st.write(f"Common Uses: {common_uses}")
+        st.write(f"**Related Medications**: {', '.join(related_medications)}")
+        st.write(f"**Common Uses**: {common_uses}")
     else:
         return "Medication not found in database."
 
