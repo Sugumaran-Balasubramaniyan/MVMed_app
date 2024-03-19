@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load data
-data = pd.read_csv('product_dispensation_data.csv')
+data = pd.read_csv('product_dispensation_data_v2.csv')
 data['Date'] = pd.to_datetime(data['Date'])
 
 warehouse_df = pd.read_csv('warehouse_data.csv')
@@ -49,29 +49,63 @@ end_date = st.sidebar.date_input('End Date', min_value=start_date, max_value=dat
 rolling_window = st.sidebar.slider('Rolling Window', min_value=0, max_value=30, step=1, value=7)
 threshold = 2
 
-# Dictionary containing medication information
+
 medications = {
-    "Paracetamol": {
-        "Related Medications": ["Tylenol", "Panadol", "Acetaminophen", "Excedrin"],
-        "Common Uses": "Pain relief, fever reduction"
+    "Zinnat": {
+        "Related Medications": ["Cefzil", "Ceclor", "Rocephin"],
+        "Common Uses": "Antibiotic for bacterial infections, such as respiratory infections, skin infections"
     },
-    "Aspirin": {
-        "Related Medications": ["Bayer Aspirin", "Bufferin", "Ecotrin"],
-        "Common Uses": "Pain relief, fever reduction, anti-inflammatory, antiplatelet (used for heart health)"
+    "Beyfortus": {
+        "Related Medications": ["Amoxicillin", "Ampicillin", "Augmentin"],
+        "Common Uses": "Acute Bronchiolitis, affecting up to 30% of babies below 2year-old during the wither and raising to respiratory detress, with cases of death, Antibiotic for bacterial infections, such as respiratory infections, ear infections, urinary tract infections"
     },
-    "Ibuprofen": {
-        "Related Medications": ["Advil", "Motrin", "Nurofen"],
-        "Common Uses": "Pain relief, fever reduction, anti-inflammatory"
+    "Actilyse": {
+        "Related Medications": ["Ciprofloxacin"],
+        "Common Uses": "Thrombolytic agent used to dissolve blood clots in heart attack, stroke, pulmonary embolism"
     },
-    "Amoxicillin": {
-        "Related Medications": ["Penicillin V", "Ampicillin", "Augmentin"],
-        "Common Uses": "Antibiotic for bacterial infections, such as respiratory infections, ear infections, urinary tract infections"
+    "Ciprofloxacin": {
+        "Related Medications": ["Levofloxacin", "Ofloxacin", "Moxifloxacin"],
+        "Common Uses": "Acute Respiratory Infection, Antibiotic for bacterial infections, such as urinary tract infections, respiratory infections, skin infections"
     },
-    "Loratadine": {
-        "Related Medications": ["Cetirizine (Zyrtec)", "Fexofenadine (Allegra)", "Desloratadine (Clarinex)"],
-        "Common Uses": "Antihistamine for allergies, such as hay fever, allergic rhinitis, hives"
+    "Zophren": {
+        "Related Medications": ["Ondansetron", "Metoclopramide", "Domperidone"],
+        "Common Uses": "Anti-nausea medication used for chemotherapy-induced nausea, post-operative nausea"
+    },
+    "Ramipril": {
+        "Related Medications": ["Enalapril", "Lisinopril", "Losartan"],
+        "Common Uses": "Cardiac Insufficiency, Angiotensin-converting enzyme (ACE) inhibitor used for high blood pressure, heart failure, diabetic kidney disease"
+    },
+    "Hydrochlorothiazid": {
+        "Related Medications": ["Chlorthalidone", "Indapamide", "Hydrochlorothiazide/Lisinopril"],
+        "Common Uses": "Cardiac Insufficiency, Diuretic used for high blood pressure, edema (fluid retention)"
+    },
+    "Bisoprolol": {
+        "Related Medications": ["Metoprolol", "Atenolol", "Carvedilol"],
+        "Common Uses": "Cardiac Insufficiency, Beta-blocker used for high blood pressure, heart failure, angina (chest pain)"
+    },
+    "Digoxine": {
+        "Related Medications": ["Digitoxin", "Dobutamine", "Milrinone"],
+        "Common Uses": "Cardiac Insufficiency , Cardiac glycoside used for heart failure, atrial fibrillation"
+    },
+    "Fluindione": {
+        "Related Medications": ["Warfarin", "Dabigatran", "Rivaroxaban"],
+        "Common Uses": "Cardiac Insufficiency, Anticoagulant (blood thinner) used for preventing blood clots, stroke prevention in atrial fibrillation"
+    },
+    "Hycamtin": {
+        "Related Medications": ["Topotecan", "Etoposide", "Cisplatin"],
+        "Common Uses": "Chemotherapy medication used for small cell lung cancer, ovarian cancer"
+    },
+    "Tofranil": {
+        "Related Medications": ["Amitriptyline", "Nortriptyline", "Imipramine"],
+        "Common Uses": "Tricyclic antidepressant used for depression, enuresis (bedwetting)"
+    },
+    "Rimactan": {
+        "Related Medications": ["Isoniazid", "Pyrazinamide", "Ethambutol"],
+        "Common Uses": "Antibiotic used to treat tuberculosis and other bacterial infections"
     }
 }
+
+
 
 # Function to display related medications and common uses
 def display_info(medication):
