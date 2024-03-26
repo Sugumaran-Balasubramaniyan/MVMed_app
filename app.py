@@ -2,7 +2,9 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 from medications_info import display_info
+from timeseries_models import train_arima_model, train_ma_model, train_holt_winters_model
 
 # Load data
 data = pd.read_csv('product_dispensation_data_v2.csv')
@@ -45,6 +47,7 @@ st.title('Dispensation and Warehouse Stock Monitoring Application')
 
 # Sidebar
 st.sidebar.title('Settings')
+st.sidebar.header('Historical Analysis')
 selected_product = st.sidebar.selectbox('Select Product', data['Product'].unique())
 start_date = st.sidebar.date_input('Start Date', min_value=data['Date'].min(), max_value=data['Date'].max())
 end_date = st.sidebar.date_input('End Date', min_value=start_date, max_value=data['Date'].max())
@@ -90,6 +93,66 @@ if st.sidebar.button('Detect Sudden Increase'):
     # Rotate x-axis labels vertically
     plt.xticks(rotation=90)
     st.pyplot(fig)
+
+# Forecasting using selected model
+
+# Dropdown to select forecasting model
+st.sidebar.header('Forecast Dispensation')
+product_to_forecast = st.sidebar.selectbox('Select Product to forecast', data['Product'].unique())
+product_data_to_forecast = data[data['Product'] == product_to_forecast]
+selected_model = st.sidebar.selectbox('Select Forecasting Model', ['ARIMA', 'Holt Winters', 'Moving Average'])
+forecast_days = st.sidebar.slider('Forecast days', min_value=0, max_value=31, step=1, value=7)
+st.sidebar.subheader('Select rolling window only for Moving Average model')
+moving_avg_rolling_window_to_forecast = st.sidebar.slider('Moving Avg Rolling Window', min_value=0, max_value=30, step=1, value=1)
+
+
+
+
+
+# Button to trigger analysis and forecasting
+if st.sidebar.button('Forecast'):
+    if selected_model == 'ARIMA':
+        forecast = train_arima_model(product_data_to_forecast, forecast_days)
+    elif selected_model == 'Holt Winters':
+        forecast = train_holt_winters_model(product_data_to_forecast, forecast_days)
+    elif selected_model == 'Moving Average':
+        forecast = train_ma_model(product_data_to_forecast, moving_avg_rolling_window_to_forecast, forecast_days)
+
+    # Display forecasted values
+    st.subheader(f"Forecasted Dispensation for the next *{forecast_days}* Days based on *{selected_model}* model",
+                divider='green')
+    forecast_dates = pd.date_range(start=end_date + pd.Timedelta(days=1), periods=forecast_days)
+    forecast_df = pd.DataFrame({'Date': forecast_dates, 'Forecast': forecast})
+    st.write(forecast_df)
+    if selected_model == "Moving Average":
+        st.subheader("Note:")
+        st.write("The forecasted values are all the same for the selected days because the Moving Average (MA) model simply uses the last computed moving average value as the forecast for all the selected days into the future.")
+
+    # Plot historical data and forecast
+    fig, ax = plt.subplots()
+    #ax.plot(product_data_to_forecast['Date'], product_data_to_forecast['Dispensation'], label='Historical Dispensation')
+    ax.plot(forecast_df['Date'], forecast_df['Forecast'], label='Forecast', linestyle='--', color='red')
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Dispensation')
+    ax.set_title('Historical Dispensation and Forecast')
+    ax.legend()
+    # Rotate x-axis labels vertically
+    plt.xticks(rotation=90)
+    st.pyplot(fig)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Set minimum stock levels
 st.sidebar.title('Set Minimum Stock Levels')
