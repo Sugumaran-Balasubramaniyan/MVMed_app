@@ -118,6 +118,9 @@ if st.sidebar.button('Forecast'):
     elif selected_model == 'Moving Average':
         forecast = train_ma_model(product_data_to_forecast, moving_avg_rolling_window_to_forecast, forecast_days)
 
+     # Round the forecast values
+    forecast = [round(value) for value in forecast]
+
     # Display forecasted values
     st.subheader(f"Forecasted Dispensation for the next *{forecast_days}* Days based on *{selected_model}* model",
                 divider='green')
