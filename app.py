@@ -100,10 +100,11 @@ if st.sidebar.button('Detect Sudden Increase'):
 st.sidebar.header('Forecast Dispensation')
 product_to_forecast = st.sidebar.selectbox('Select Product to forecast', data['Product'].unique())
 product_data_to_forecast = data[data['Product'] == product_to_forecast]
-selected_model = st.sidebar.selectbox('Select Forecasting Model', ['ARIMA', 'Holt Winters', 'Moving Average'])
+selected_model = 'ARIMA'
+#selected_model = st.sidebar.selectbox('Select Forecasting Model', ['ARIMA', 'Holt Winters', 'Moving Average'])
 forecast_days = st.sidebar.slider('Forecast days', min_value=0, max_value=31, step=1, value=7)
-st.sidebar.subheader('Select rolling window only for Moving Average model')
-moving_avg_rolling_window_to_forecast = st.sidebar.slider('Moving Avg Rolling Window', min_value=0, max_value=30, step=1, value=1)
+#st.sidebar.subheader('Select rolling window only for Moving Average model')
+#moving_avg_rolling_window_to_forecast = st.sidebar.slider('Moving Avg Rolling Window', min_value=0, max_value=30, step=1, value=1)
 
 
 
@@ -111,18 +112,19 @@ moving_avg_rolling_window_to_forecast = st.sidebar.slider('Moving Avg Rolling Wi
 
 # Button to trigger analysis and forecasting
 if st.sidebar.button('Forecast'):
-    if selected_model == 'ARIMA':
-        forecast = train_arima_model(product_data_to_forecast, forecast_days)
-    elif selected_model == 'Holt Winters':
-        forecast = train_holt_winters_model(product_data_to_forecast, forecast_days)
-    elif selected_model == 'Moving Average':
-        forecast = train_ma_model(product_data_to_forecast, moving_avg_rolling_window_to_forecast, forecast_days)
-
+    forecast = train_arima_model(product_data_to_forecast, forecast_days)
+    #if selected_model == 'ARIMA':
+    #    forecast = train_arima_model(product_data_to_forecast, forecast_days)
+    #elif selected_model == 'Holt Winters':
+    #    forecast = train_holt_winters_model(product_data_to_forecast, forecast_days)
+    #elif selected_model == 'Moving Average':
+    #    forecast = train_ma_model(product_data_to_forecast, moving_avg_rolling_window_to_forecast, forecast_days)
+        
      # Round the forecast values
     forecast = [round(value) for value in forecast]
 
     # Display forecasted values
-    st.subheader(f"Forecasted Dispensation for the next *{forecast_days}* Days based on *{selected_model}* model",
+    st.subheader(f"Forecasted Dispensation for the next *{forecast_days}* Days",
                 divider='green')
     forecast_dates = pd.date_range(start=end_date + pd.Timedelta(days=1), periods=forecast_days)
     forecast_df = pd.DataFrame({'Date': forecast_dates, 'Forecast': forecast})
